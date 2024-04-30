@@ -1,15 +1,17 @@
 import React, { useEffect, useReducer } from "react";
 import Header from "./Header";
-import Main from "./Main";
+import Main from "../Main";
 import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
+import Question from "./Question";
 const App = () => {
   const initialState = {
     questions: [],
 
     //'loading', 'error,' 'ready', 'active', 'finished'
     status: "loading",
+    index: 0,
   };
   const reducer = (state, action) => {
     switch (action.type) {
@@ -24,12 +26,20 @@ const App = () => {
           ...state,
           status: "error",
         };
+      case "start":
+        return {
+          ...state,
+          status: "active",
+        };
       default:
         throw new Error("Invalid action type");
     }
   };
 
-  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   const getQuestions = async () => {
     try {
       const response = await fetch("http://localhost:8000/questions");
@@ -50,7 +60,10 @@ const App = () => {
       <Main>
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
-        {status === "ready" && <StartScreen numQuestions={numQuestions} />}
+        {status === "ready" && (
+          <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
+        )}
+        {status === "active" && <Question question={questions[index]} />}
       </Main>
     </div>
   );

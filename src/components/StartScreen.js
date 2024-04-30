@@ -1,11 +1,16 @@
 import React from "react";
 
-const StartScreen = ({ numQuestions }) => {
+const StartScreen = ({ numQuestions, dispatch }) => {
   return (
     <div className="start">
       <h2>Welcome to the React quiz</h2>
       <h3>{numQuestions} questions to test your React skills</h3>
-      <button className="btn btn-ui">Let's start</button>
+      <button
+        className="btn btn-ui"
+        onClick={() => dispatch({ type: "start" })}
+      >
+        Let's start
+      </button>
     </div>
   );
 };
