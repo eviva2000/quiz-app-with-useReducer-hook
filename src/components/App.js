@@ -7,11 +7,11 @@ import StartScreen from "./StartScreen";
 import Question from "./Question";
 import { NextButton } from "./NextButton";
 import Progress from "./Progress";
+import FinishScreen from "./FinishScreen";
 
 const App = () => {
   const initialState = {
     questions: [],
-
     //'loading', 'error,' 'ready', 'active', 'finished'
     status: "loading",
     index: 0,
@@ -52,6 +52,18 @@ const App = () => {
           index: state.index + 1,
           answer: null,
         };
+      case "finish":
+        return {
+          ...state,
+          status: "finished",
+        };
+      case "reset":
+        return {
+          ...initialState,
+          questions: state.questions,
+          status: "ready",
+        };
+
       default:
         throw new Error("Invalid action type");
     }
@@ -102,8 +114,20 @@ const App = () => {
               dispatch={dispatch}
               answer={answer}
             />
-            <NextButton dispatch={dispatch} answer={answer} />
+            <NextButton
+              dispatch={dispatch}
+              answer={answer}
+              index={index}
+              numQuestions={numQuestions}
+            />
           </>
+        )}
+        {status === "finished" && (
+          <FinishScreen
+            points={points}
+            maxPossiblePoints={maxPossiblePoints}
+            dispatch={dispatch}
+          />
         )}
       </Main>
     </div>
